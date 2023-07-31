@@ -1,0 +1,47 @@
+# Distributed under the MIT License.
+# See LICENSE.txt for details.
+
+Executable: ExportCoordinates3D
+Testing:
+  Check: parse;execute
+ExpectedOutput:
+  - ExportCoordinates3DVolume0.h5
+  - ExportCoordinates3DReductions.h5
+
+---
+
+ResourceInfo:
+  AvoidGlobalProc0: false
+
+DomainCreator:
+  Brick:
+    LowerBound: [-1.0, -1.0, -1.0]
+    UpperBound: [1.0, 1.0, 1.0]
+    IsPeriodicIn: [false, false, false]
+    InitialRefinement: [0, 0, 0]
+    InitialGridPoints: [3, 3, 3]
+    TimeDependence: None
+
+SpatialDiscretization:
+  ActiveGrid: Dg
+  DiscontinuousGalerkin:
+    Quadrature: GaussLobatto
+
+Evolution:
+  InitialTime: 0.0
+  InitialTimeStep: 0.1
+  TimeStepper:
+    AdamsBashforth:
+      Order: 1
+
+EventsAndTriggers:
+  - Trigger:
+      TimeCompares:
+        Comparison: GreaterThanOrEqualTo
+        Value: 0.0
+    Events:
+      - Completion
+
+Observers:
+  VolumeFileName: "ExportCoordinates3DVolume"
+  ReductionFileName: "ExportCoordinates3DReductions"
